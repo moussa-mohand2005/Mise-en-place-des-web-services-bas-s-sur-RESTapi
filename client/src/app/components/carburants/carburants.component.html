@@ -1,0 +1,119 @@
+<div class="container mt-4 fade-in">
+  <div class="page-title">
+    <i class="bi bi-fuel-pump"></i>
+    <h2>Gestion des Carburants</h2>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row stats-section">
+    <div class="col-md-6">
+      <div class="stats-card">
+        <i class="bi bi-droplet-fill"></i>
+        <p class="stat-number">{{ carburants.length }}</p>
+        <p class="stat-label">Types de Carburants</p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="stats-card success">
+        <i class="bi bi-check-circle"></i>
+        <p class="stat-number">{{ carburants.length }}</p>
+        <p class="stat-label">Carburants Disponibles</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5>
+        <i class="bi bi-plus-circle-fill"></i>
+        {{ isEditing ? 'Modifier un Carburant' : 'Ajouter un Carburant' }}
+      </h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="carburantForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="nom" class="form-label">
+              <i class="bi bi-tag-fill"></i> Nom du Carburant
+            </label>
+            <input type="text" class="form-control" id="nom" formControlName="nom" 
+                   placeholder="Ex: Essence SP95" required>
+            <div class="text-danger small mt-1" *ngIf="carburantForm.get('nom')?.invalid && carburantForm.get('nom')?.touched">
+              <i class="bi bi-exclamation-circle"></i> Le nom est requis
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="description" class="form-label">
+              <i class="bi bi-info-circle-fill"></i> Description
+            </label>
+            <input type="text" class="form-control" id="description" formControlName="description" 
+                   placeholder="Description du carburant" required>
+            <div class="text-danger small mt-1" *ngIf="carburantForm.get('description')?.invalid && carburantForm.get('description')?.touched">
+              <i class="bi bi-exclamation-circle"></i> La description est requise
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn btn-secondary" (click)="resetForm()" *ngIf="isEditing">
+            <i class="bi bi-x-circle"></i> Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="carburantForm.invalid">
+            <i class="bi" [class.bi-check-circle]="!isEditing" [class.bi-pencil-square]="isEditing"></i>
+            {{ isEditing ? 'Modifier' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- List Card -->
+  <div class="card">
+    <div class="card-header">
+      <h5>
+        <i class="bi bi-list-ul"></i> Liste des Carburants
+        <span class="badge bg-light text-dark ms-2">{{ carburants.length }}</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive" *ngIf="carburants.length > 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th><i class="bi bi-hash"></i> ID</th>
+              <th><i class="bi bi-tag"></i> Nom</th>
+              <th><i class="bi bi-info-circle"></i> Description</th>
+              <th><i class="bi bi-gear"></i> Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let carburant of carburants">
+              <td><strong>{{ carburant.id }}</strong></td>
+              <td>
+                <span class="carburant-badge">
+                  <i class="bi bi-droplet-fill"></i> {{ carburant.nom }}
+                </span>
+              </td>
+              <td>{{ carburant.description }}</td>
+              <td>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button class="btn btn-sm btn-warning" (click)="editCarburant(carburant)" title="Modifier">
+                    <i class="bi bi-pencil-square"></i> Modifier
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteCarburant(carburant.id!)" title="Supprimer">
+                    <i class="bi bi-trash"></i> Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="empty-state" *ngIf="carburants.length === 0">
+        <i class="bi bi-inbox"></i>
+        <h5>Aucun carburant trouvé</h5>
+        <p class="text-muted">Commencez par ajouter un nouveau carburant</p>
+      </div>
+    </div>
+  </div>
+</div>

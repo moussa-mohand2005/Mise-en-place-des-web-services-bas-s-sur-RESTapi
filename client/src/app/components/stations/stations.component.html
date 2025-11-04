@@ -1,0 +1,145 @@
+<div class="container mt-4 fade-in">
+  <div class="page-title">
+    <i class="bi bi-geo-alt-fill"></i>
+    <h2>Gestion des Stations</h2>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row stats-section">
+    <div class="col-md-4">
+      <div class="stats-card">
+        <i class="bi bi-building"></i>
+        <p class="stat-number">{{ stations.length }}</p>
+        <p class="stat-label">Total Stations</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stats-card success">
+        <i class="bi bi-check-circle"></i>
+        <p class="stat-number">{{ stations.length }}</p>
+        <p class="stat-label">Stations Actives</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stats-card info">
+        <i class="bi bi-geo-alt"></i>
+        <p class="stat-number">{{ stations.length }}</p>
+        <p class="stat-label">Villes</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Card -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h5>
+        <i class="bi bi-plus-circle-fill"></i>
+        {{ isEditing ? 'Modifier une Station' : 'Ajouter une Station' }}
+      </h5>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="stationForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="nom" class="form-label">
+              <i class="bi bi-tag-fill"></i> Nom
+            </label>
+            <input type="text" class="form-control" id="nom" formControlName="nom" 
+                   placeholder="Nom de la station" required>
+            <div class="text-danger small mt-1" *ngIf="stationForm.get('nom')?.invalid && stationForm.get('nom')?.touched">
+              <i class="bi bi-exclamation-circle"></i> Le nom est requis
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="ville" class="form-label">
+              <i class="bi bi-geo-alt-fill"></i> Ville
+            </label>
+            <input type="text" class="form-control" id="ville" formControlName="ville" 
+                   placeholder="Nom de la ville" required>
+            <div class="text-danger small mt-1" *ngIf="stationForm.get('ville')?.invalid && stationForm.get('ville')?.touched">
+              <i class="bi bi-exclamation-circle"></i> La ville est requise
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="adresse" class="form-label">
+              <i class="bi bi-geo"></i> Adresse
+            </label>
+            <input type="text" class="form-control" id="adresse" formControlName="adresse" 
+                   placeholder="Adresse complète" required>
+            <div class="text-danger small mt-1" *ngIf="stationForm.get('adresse')?.invalid && stationForm.get('adresse')?.touched">
+              <i class="bi bi-exclamation-circle"></i> L'adresse est requise
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn btn-secondary" (click)="resetForm()" *ngIf="isEditing">
+            <i class="bi bi-x-circle"></i> Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="stationForm.invalid">
+            <i class="bi" [class.bi-check-circle]="!isEditing" [class.bi-pencil-square]="isEditing"></i>
+            {{ isEditing ? 'Modifier' : 'Ajouter' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- List Card -->
+  <div class="card">
+    <div class="card-header">
+      <h5>
+        <i class="bi bi-list-ul"></i> Liste des Stations
+        <span class="badge bg-light text-dark ms-2">{{ stations.length }}</span>
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive" *ngIf="stations.length > 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th><i class="bi bi-hash"></i> ID</th>
+              <th><i class="bi bi-tag"></i> Nom</th>
+              <th><i class="bi bi-geo-alt"></i> Ville</th>
+              <th><i class="bi bi-geo"></i> Adresse</th>
+              <th><i class="bi bi-gear"></i> Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let station of stations">
+              <td><strong>{{ station.id }}</strong></td>
+              <td>
+                <div class="station-info">
+                  <div class="station-icon">
+                    <i class="bi bi-fuel-pump"></i>
+                  </div>
+                  <strong>{{ station.nom }}</strong>
+                </div>
+              </td>
+              <td>
+                <span class="badge bg-info">
+                  <i class="bi bi-geo-alt-fill"></i> {{ station.ville }}
+                </span>
+              </td>
+              <td>{{ station.adresse }}</td>
+              <td>
+                <div class="d-flex gap-2 justify-content-end">
+                  <button class="btn btn-sm btn-warning" (click)="editStation(station)" title="Modifier">
+                    <i class="bi bi-pencil-square"></i> Modifier
+                  </button>
+                  <button class="btn btn-sm btn-danger" (click)="deleteStation(station.id!)" title="Supprimer">
+                    <i class="bi bi-trash"></i> Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="empty-state" *ngIf="stations.length === 0">
+        <i class="bi bi-inbox"></i>
+        <h5>Aucune station trouvée</h5>
+        <p class="text-muted">Commencez par ajouter une nouvelle station</p>
+      </div>
+    </div>
+  </div>
+</div>
